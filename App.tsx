@@ -2,9 +2,14 @@ import React from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './reduxStore';
+import { RootStackParamList } from './src/types/navigation';
+
+// Screens
 import Login from './src/Auth/Login';
 import CreateAccount from './src/Auth/CreateAccount';
-import { RootStackParamList } from './src/types/navigation';
 import OtpVerify from './src/Auth/OtpVerify';
 import CreatePassword from './src/Auth/CreatePassword';
 import AccountCreated from './src/Auth/AccountCreated';
@@ -16,7 +21,9 @@ function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <NavigationContainer>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+      <NavigationContainer>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false, animation: 'default' }}>
         {/* Auth Screens */}
@@ -30,6 +37,8 @@ function App() {
         <Stack.Screen name="Home" component={Home} options={{ animation: 'slide_from_right' }} />
       </Stack.Navigator>
     </NavigationContainer>
+      </PersistGate>
+    </Provider>
   );
 }
 

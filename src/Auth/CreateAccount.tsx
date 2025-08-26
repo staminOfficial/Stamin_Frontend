@@ -1,5 +1,6 @@
-import {StyleSheet, TouchableOpacity, View, ScrollView, Keyboard} from 'react-native'
+import { StyleSheet, TouchableOpacity, View, ScrollView,Platform, Keyboard,Vibration, ToastAndroid } from 'react-native'
 import React, { useState } from "react";
+import { vibrationPattern } from '../constants/vibrationPattern';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
@@ -15,24 +16,80 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import AuthHeaderFrame from '../components/Headers/Auth/AuthHeaderFrame';
 import InputHeadingText from '../components/InputSection/InputHeadingText';
 import HeadingText from '../components/Headers/Auth/HeadingText';
+import { signupSchema } from "../schemas/signupSchema";
+import { signupUser } from '../../reduxStore/slices/signupSlice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../reduxStore';
+import Toast from "react-native-toast-message";
 
 const CreateAccount = () => {
   type CraeteAccountScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'CreateAccount'>;
   const navigation = useNavigation<CraeteAccountScreenNavigationProp>();
+  const dispatch = useDispatch<AppDispatch>();
+  
+  //Manual functions
+  const isAndroid = Platform.OS === "android";
 
   //useStates
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
-  const [date, setDate] = useState(new Date());
+  const [dateOfBirth, setDateOfBirth] = useState(new Date());
 
-  const handleSubmit = async () => {
+  //Form Data
+  const formData = {
+    firstName,
+    lastName,
+    email,
+    dateOfBirth,
+  }
+
+  //feedback message
+    const feedback = (message: string, type: "error" | "success" = "error") => {
+    if (type === "error") {
+      Vibration.vibrate(vibrationPattern);
+      isAndroid
+        ? ToastAndroid.show(message, ToastAndroid.SHORT)
+        : Toast.show({
+            type,
+            text1: message,
+            visibilityTime: 3000,
+            autoHide: true,
+          });
+    } else
+      Toast.show({
+        type,
+        text1: message,
+        visibilityTime: 3000,
+        autoHide: true,
+      });
+  };
+
+  //Continue button function
+  const ValidateSignupForm = async () => {
+    try {
+      const SignupPayload = signupSchema.parse(formData);
+      // ✅ NOW convert to ISO only for sending to backend
+      const payloadForBackend = {
+        ...SignupPayload,
+        dateOfBirth: SignupPayload.dateOfBirth
+          ? (() => {
+            const [day, month, year] = SignupPayload.dateOfBirth.split("-");
+            return `${year}-${month}-${day}`;
+          })()
+          : undefined,
+      };
+      const response = await dispatch(signupUser(payloadForBackend)).unwrap();
+      feedback(response.message || "OTP sent to email", "success");
+    } catch {
+
+    }
     // Form submit function
     navigation.navigate('OtpVerify')
   }
 
   const onChange = (event: any, selectedDate?: Date) => {
-    if (selectedDate) setDate(selectedDate);
+    if (selectedDate) setDateOfBirth(selectedDate);
   };
 
   return (
@@ -88,7 +145,7 @@ const CreateAccount = () => {
               onPress={() => {
                 Keyboard.dismiss();
                 DateTimePickerAndroid.open({
-                  value: date,
+                  value: dateOfBirth,
                   onChange,
                   mode: 'date',
                   maximumDate: new Date(),
@@ -96,14 +153,14 @@ const CreateAccount = () => {
                 })
               }}
               activeOpacity={0.7} style={styles.DOB_Input_View}>
-              <InputHeadingText style={{ fontSize: 16 }}>{date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}</InputHeadingText>
+              <InputHeadingText style={{ fontSize: 16 }}>{dateOfBirth.getDate()}/{dateOfBirth.getMonth() + 1}/{dateOfBirth.getFullYear()}</InputHeadingText>
               <CalendarSvg />
             </TouchableOpacity>
           </View>
         </View>
         {/* Next Button */}
         <View style={styles.ButtonContainer}>
-          <AuthButton disabled={false} onPress={handleSubmit}>
+          <AuthButton disabled={false} onPress={ValidateSignupForm}>
             <TextScallingFalse style={styles.SubmitButtonText}>Next</TextScallingFalse>
           </AuthButton>
         </View>
