@@ -46,6 +46,6 @@ export const store = configureStore({
 export const persistor = persistStore(store);
 
 // Infer the 'Rootstate' and 'AppDispatch' types from the store itself
-export type Rootstate = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>
 // Inferred type: {posts: PostState, comments: CommentsState, users: UsersStae}
 export type AppDispatch = typeof store.dispatch

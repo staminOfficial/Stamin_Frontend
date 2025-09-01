@@ -1,6 +1,5 @@
-import { StyleSheet, TouchableOpacity, View, ScrollView,Platform, Keyboard,Vibration, ToastAndroid } from 'react-native'
+import { StyleSheet, TouchableOpacity,ActivityIndicator, View, ScrollView,Platform, Keyboard,Vibration, ToastAndroid } from 'react-native'
 import React, { useState } from "react";
-import { vibrationPattern } from '../constants/vibrationPattern';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
@@ -16,16 +15,18 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import AuthHeaderFrame from '../components/Headers/Auth/AuthHeaderFrame';
 import InputHeadingText from '../components/InputSection/InputHeadingText';
 import HeadingText from '../components/Headers/Auth/HeadingText';
+import { z } from 'zod';
+import { useDispatch, useSelector } from "react-redux";
 import { signupSchema } from "../schemas/signupSchema";
 import { signupUser } from '../../reduxStore/slices/signupSlice';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../reduxStore';
+import { AppDispatch, RootState } from '../../reduxStore';
 import Toast from "react-native-toast-message";
 
 const CreateAccount = () => {
   type CraeteAccountScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'CreateAccount'>;
   const navigation = useNavigation<CraeteAccountScreenNavigationProp>();
   const dispatch = useDispatch<AppDispatch>();
+  const { loading } = useSelector((state: RootState) => state.signup);
   
   //Manual functions
   const isAndroid = Platform.OS === "android";
@@ -34,7 +35,8 @@ const CreateAccount = () => {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
-  const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [dobDate, setDobDate] = useState(new Date());
 
   //Form Data
   const formData = {
@@ -47,7 +49,7 @@ const CreateAccount = () => {
   //feedback message
     const feedback = (message: string, type: "error" | "success" = "error") => {
     if (type === "error") {
-      Vibration.vibrate(vibrationPattern);
+      // Vibration.vibrate(vibrationPattern);
       isAndroid
         ? ToastAndroid.show(message, ToastAndroid.SHORT)
         : Toast.show({
@@ -81,16 +83,28 @@ const CreateAccount = () => {
       };
       const response = await dispatch(signupUser(payloadForBackend)).unwrap();
       feedback(response.message || "OTP sent to email", "success");
-    } catch {
-
+      // Navigate to next page
+      navigation.navigate('OtpVerify')
+    } catch (err: any) {
+      if (err instanceof z.ZodError) {
+        const validationError = err.errors[0]?.message || "Invalid input.";
+        feedback(validationError,"error");
+      } else {
+        console.log("Backend response: ", err);
+        feedback(err || "An error occured. Please try again.");
+      }
     }
-    // Form submit function
-    navigation.navigate('OtpVerify')
   }
 
   const onChange = (event: any, selectedDate?: Date) => {
-    if (selectedDate) setDateOfBirth(selectedDate);
-  };
+  if (selectedDate) {
+    setDobDate(selectedDate);
+    const day = String(selectedDate.getDate()).padStart(2, "0");
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
+    const year = selectedDate.getFullYear();
+    setDateOfBirth(`${day}-${month}-${year}`); // string for schema/backend
+  }
+};
 
   return (
     <PageThemeView>
@@ -145,7 +159,7 @@ const CreateAccount = () => {
               onPress={() => {
                 Keyboard.dismiss();
                 DateTimePickerAndroid.open({
-                  value: dateOfBirth,
+                  value: dobDate,
                   onChange,
                   mode: 'date',
                   maximumDate: new Date(),
@@ -153,16 +167,21 @@ const CreateAccount = () => {
                 })
               }}
               activeOpacity={0.7} style={styles.DOB_Input_View}>
-              <InputHeadingText style={{ fontSize: 16 }}>{dateOfBirth.getDate()}/{dateOfBirth.getMonth() + 1}/{dateOfBirth.getFullYear()}</InputHeadingText>
+              <InputHeadingText style={{ fontSize: 16 }}> {dobDate.getDate()}/{dobDate.getMonth() + 1}/{dobDate.getFullYear()}</InputHeadingText>
               <CalendarSvg />
             </TouchableOpacity>
           </View>
         </View>
         {/* Next Button */}
         <View style={styles.ButtonContainer}>
-          <AuthButton disabled={false} onPress={ValidateSignupForm}>
+          {
+            loading ? 
+            <ActivityIndicator color={'#BAFF4C'} size={40} style={{paddingVertical: 1}}/>
+            :
+            <AuthButton disabled={false} onPress={ValidateSignupForm}>
             <TextScallingFalse style={styles.SubmitButtonText}>Next</TextScallingFalse>
           </AuthButton>
+          }
         </View>
         {/* Indicator */}
         <AuthSteps currentStep={1} />

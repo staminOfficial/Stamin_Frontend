@@ -9,7 +9,7 @@ export const signupSchema = z.object({
     .optional()
     .refine(
       (date) => {
-        if (date === "") return true;
+        if (!date || date === "") return true;
 
         const regex = /^\d{2}-\d{2}-\d{4}$/;
         if (!regex.test(date)) return false;

@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { PUBLIC_BASE_URL } from "@env";
 
 //Types
 interface SignupState {
@@ -32,7 +33,7 @@ SignupPayload, // Argument type
 >("auth/SignupUser", async (SignupPayload, { rejectWithValue }) => {
     try {
         const response = await fetch(
-            `${process.env.EXPO_PUBLIC_BASE_URL}`,
+            `${PUBLIC_BASE_URL}/api/v1/initiate-signup`,
             {
                 method: "POST",
                 headers: {
@@ -60,6 +61,7 @@ SignupPayload, // Argument type
     }
 });
 
+// Slices
 const signupSlice = createSlice({
   name: "signup",
   initialState,
@@ -72,6 +74,30 @@ const signupSlice = createSlice({
         state.email = null;
     },
   },
+  extraReducers: (builder) => {
+    // Signup Thunk
+    builder
+      .addCase(signupUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+        state.userId = null;
+        state.email = null;
+      })
+      .addCase(signupUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+        state.userId = action.payload.userId; // Store user ID
+        state.email = action.payload.email; // Store userEmail
+      })
+      .addCase(signupUser.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error =
+          action.payload || "Unexpected error occurred during signup.";
+      });
+  }
 });
 
 export const { resetSignupState } = signupSlice.actions
