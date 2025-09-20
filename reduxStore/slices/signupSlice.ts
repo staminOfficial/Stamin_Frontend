@@ -42,6 +42,7 @@ SignupPayload, // Argument type
                 body: JSON.stringify(SignupPayload),
             }
         );
+        console.log("PUBLIC_BASE_URL:", PUBLIC_BASE_URL);
 
          const data = await response.json();
 

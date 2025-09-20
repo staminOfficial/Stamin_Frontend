@@ -82,6 +82,7 @@ const CreateAccount = () => {
           : undefined,
       };
       const response = await dispatch(signupUser(payloadForBackend)).unwrap();
+      console.log("Signup response:", response);
       feedback(response.message || "OTP sent to email", "success");
       // Navigate to next page
       navigation.navigate('OtpVerify')
