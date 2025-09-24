@@ -28,3 +28,15 @@ export const signupSchema = z.object({
       { message: "Invalid date format. Use 'DD-MM-YYYY'." }
     ),
 })
+
+export const otpSchema = z.object({
+  OTP: z
+  .string()
+  .regex(/^\d+$/, "OTP must contain only numbers.")
+  .length(6, "OTP must be excatly 6 digits."),
+  userId: z.string().nonempty("User ID is required."),
+});
+export const resendOtpSchema = z.object({
+  userId: z.string().nonempty("User ID is required."),
+  email: z.string(),
+})

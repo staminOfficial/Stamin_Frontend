@@ -18,7 +18,7 @@ import HeadingText from '../components/Headers/Auth/HeadingText';
 import { z } from 'zod';
 import { useDispatch, useSelector } from "react-redux";
 import { signupSchema } from "../schemas/signupSchema";
-import { signupUser } from '../../reduxStore/slices/signupSlice';
+import { signupUser } from '../../reduxStore/slices/user/signupSlice';
 import { AppDispatch, RootState } from '../../reduxStore';
 import Toast from "react-native-toast-message";
 

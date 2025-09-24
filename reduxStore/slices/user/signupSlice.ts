@@ -62,6 +62,44 @@ SignupPayload, // Argument type
     }
 });
 
+interface OtpPayload {
+    _id: string;
+    otp: string;
+}
+//Thunk for Verify OTP
+export const verifyOtpSignup = createAsyncThunk<
+{ message: string },
+OtpPayload,
+{ rejectValue: string }
+>("auth/verifyOtp", async (OtpPayload, { rejectWithValue }) => {
+    try {
+        const response = await fetch(
+            `${PUBLIC_BASE_URL}/api/v1/verify-otp`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(OtpPayload),
+            }
+        );
+
+        const data = await response.json();
+
+        if(!response.ok) {
+            return rejectWithValue(
+                data.message || "Verification failed. Please try again."
+            );
+        }
+
+        return { message: data.message };
+    } catch (error: any) {
+        console.error("Verification Error:", error);
+        return rejectWithValue("Something went wrong. Please try agian later.");
+    }
+});
+
+
 // Slices
 const signupSlice = createSlice({
   name: "signup",

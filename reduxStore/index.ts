@@ -11,7 +11,7 @@ import {
   REGISTER,
 } from "redux-persist";
 
-import signupReducer from "./slices/signupSlice";
+import signupReducer from "./slices/user/signupSlice";
 import { getDefaultConfig } from "@react-native/metro-config";
 
 //Only reducers available in whitelist are stored in Async
