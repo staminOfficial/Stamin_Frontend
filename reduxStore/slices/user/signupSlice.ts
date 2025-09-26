@@ -99,6 +99,44 @@ OtpPayload,
     }
 });
 
+interface resendOTPPayload {
+  _id: string;
+  email: string;
+}
+
+// Resend OTP Thunk
+export const resendOtp = createAsyncThunk<
+  { message: string },
+  resendOTPPayload,
+  { rejectValue: string }
+>("auth/resendOtp", async (resendOTPPayload, { rejectWithValue }) => {
+  try {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_BASE_URL}/api/v1/resend-otp`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(resendOTPPayload),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return rejectWithValue(
+        data.message || "Resending OTP failed. Please try again."
+      );
+    }
+
+    return { message: data.message };
+  } catch (error: any) {
+    console.error("Resend OTP Error:", error);
+    return rejectWithValue("Something went wrong. Please try again later.");
+  }
+});
+
 
 // Slices
 const signupSlice = createSlice({

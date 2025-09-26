@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, TouchableOpacity, Platform, ToastAndroid, View } from 'react-native'
+import { StyleSheet, ScrollView, TouchableOpacity, Platform, ActivityIndicator, ToastAndroid, View } from 'react-native'
 import React, { useState } from "react";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -16,8 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import AuthSteps from '../components/Indicators/AuthIndicators/AuthSteps';
 import { AppDispatch, RootState } from '../../reduxStore';
 import { z } from "zod";
-import { otpSchema } from '../schemas/signupSchema';
-import { verifyOtpSignup } from '../../reduxStore/slices/user/signupSlice';
+import { otpSchema, resendOtpSchema } from '../schemas/signupSchema';
+import { verifyOtpSignup, resendOtp } from '../../reduxStore/slices/user/signupSlice';
 import Toast from 'react-native-toast-message';
 
 const OtpVerify = () => {
@@ -32,22 +32,41 @@ const OtpVerify = () => {
   //feedback message
   const feedback = (message: string, type: "error" | "success" = "error") => {
     if (type === "error") {
-      // Vibration.vibrate(vibrationPattern);
       isAndroid
         ? ToastAndroid.show(message, ToastAndroid.SHORT)
-        : Toast.show({
-          type,
-          text1: message,
-          visibilityTime: 3000,
-          autoHide: true,
-        });
-    } else
-      Toast.show({
-        type,
-        text1: message,
-        visibilityTime: 3000,
-        autoHide: true,
-      });
+        : Toast.show({ type, text1: message, visibilityTime: 3000, autoHide: true });
+    } else {
+      isAndroid
+        ? ToastAndroid.show(message, ToastAndroid.SHORT)
+        : Toast.show({ type, text1: message, visibilityTime: 3000, autoHide: true });
+    }
+  }
+
+  const handleResendOtp = async () => {
+    try {
+      const resendOTPPayload = resendOtpSchema.parse({ userId, email });
+
+      const response = await dispatch(
+        resendOtp({
+          _id: resendOTPPayload.userId,
+          email: resendOTPPayload.email,
+        })
+      ).unwrap();
+
+      feedback(response.message || "OTP sent successfully!", "success");
+      console.log("backend response for resendotp - ", response.message);
+
+      // handleNextScreen(); // Navigate to the next screen on success
+    } catch (err: any) {
+      if (err instanceof z.ZodError) {
+        const validationError = err.errors[0]?.message || "Invalid input.";
+        console.log("zod error - ", validationError);
+        feedback(validationError);
+      } else {
+        feedback(err || "Verification failed. Please try again.");
+        console.log("backend error - ", err);
+      }
+    }
   };
 
 
@@ -103,8 +122,16 @@ const OtpVerify = () => {
               onChangeText={setOTP}
             />
           </View>
+          {/* Resend button */}
+          <TouchableOpacity onPress={handleResendOtp} activeOpacity={0.7} style={styles.resendButton}>
+            {loading ?
+              <ActivityIndicator style={styles.loader} color={'white'} size={'small'}/>
+              :
+              <TextScallingFalse style={styles.resendText}>Resend Otp</TextScallingFalse>
+            }
+          </TouchableOpacity>
           {/* Verify Button  */}
-          <AuthButton style={styles.VerifyButtonStyle} disabled={false} onPress={handleVerify}>
+          <AuthButton disabled={false} onPress={handleVerify}>
             Verify
           </AuthButton>
         </View>
@@ -141,7 +168,17 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 10
   },
-  VerifyButtonStyle: {
-    marginTop: '10%'
+  resendText: {
+    color: 'white',
+    fontSize: 13,
+    fontWeight: '500',
+    padding: 5
+  },
+  resendButton: {
+    padding: 20,
+    alignSelf: 'center'
+  },
+  loader: {
+    padding: 4,
   }
 })
