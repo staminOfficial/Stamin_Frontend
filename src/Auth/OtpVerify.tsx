@@ -23,7 +23,7 @@ import Toast from 'react-native-toast-message';
 const OtpVerify = () => {
   type OtpVerifyNavigationProp = NativeStackNavigationProp<RootStackParamList, 'OtpVerify'>;
   const navigation = useNavigation<OtpVerifyNavigationProp>();
-  const { loading, userId, email, success, error } = useSelector((state: RootState) => state.signup);
+  const { loading, loading2, userId, email, success, error } = useSelector((state: RootState) => state.signup);
   const dispatch = useDispatch<AppDispatch>();
   const isAndroid = Platform.OS === "android";
   //useStates
@@ -120,20 +120,26 @@ const OtpVerify = () => {
               placeholder=''
               value={OTP}
               onChangeText={setOTP}
+              keyboardType="number-pad"
             />
           </View>
           {/* Resend button */}
           <TouchableOpacity onPress={handleResendOtp} activeOpacity={0.7} style={styles.resendButton}>
-            {loading ?
-              <ActivityIndicator style={styles.loader} color={'white'} size={'small'}/>
+            {loading2 ?
+              <ActivityIndicator style={styles.loader} color={'white'} size={'small'} />
               :
               <TextScallingFalse style={styles.resendText}>Resend Otp</TextScallingFalse>
             }
           </TouchableOpacity>
           {/* Verify Button  */}
-          <AuthButton disabled={false} onPress={handleVerify}>
-            Verify
-          </AuthButton>
+          {
+            loading ?
+            <ActivityIndicator style={styles.loader} color={'white'} size={'large'} />
+              :
+              <AuthButton disabled={false} onPress={handleVerify}>
+                Verify
+              </AuthButton>
+          }
         </View>
         <AuthSteps currentStep={2} />
       </ScrollView>
