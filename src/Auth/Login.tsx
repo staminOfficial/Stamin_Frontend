@@ -20,10 +20,15 @@ const Login = () => {
     //useStates
     const [id, setId] = useState("")
 
-    //Functions
-    const handleLogin = async () => {
+    //Signup Functions
+    const handleSignup = async () => {
         navigation.navigate('CreateAccount');
     };
+
+    //Login Function
+    const handleLogin = async () => {
+        // Login function logic
+    }
 
     return (
         <PageThemeView>
@@ -40,7 +45,7 @@ const Login = () => {
                         </TouchableOpacity>
                     </View>
                     {/* Banner component */}
-                    <View style={[styles.LoginBannerView, {position:'relative'}]}>
+                    <View style={[styles.LoginBannerView, { position: 'relative' }]}>
                         <Image style={styles.LoginBannerImage} source={login_banner} />
                         <TextScallingFalse style={styles.LoginBannerText}>
                             Train Hard Think Smart
@@ -62,12 +67,16 @@ const Login = () => {
                                 onChangeText={setId} />
                         </View>
                         <TouchableOpacity activeOpacity={0.5} style={styles.ForgotPasswordButton}>
-                            <InputHeadingText style={{color: '#BAFF4C'}}>Forgot Password</InputHeadingText>
+                            <InputHeadingText style={{ color: '#BAFF4C' }}>Forgot Password</InputHeadingText>
                         </TouchableOpacity>
                     </View>
                     {/* Signup Button Component*/}
                     <AuthButton disabled={false} onPress={handleLogin}>
                         Sign in
+                    </AuthButton>
+                    {/* Signup Button Component*/}
+                    <AuthButton disabled={false} onPress={handleSignup} textStyle={styles.SignupButtonText} style={styles.SignupButton}>
+                        Don't have an account? Sign up
                     </AuthButton>
                 </View>
             </ScrollView>
@@ -128,7 +137,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 15,
         zIndex: 10,
-        position:'absolute',
+        position: 'absolute',
         top: '66%',
         right: '31%',
     },
@@ -146,9 +155,14 @@ const styles = StyleSheet.create({
     ForgotPasswordButton: {
         paddingVertical: 1
     },
-    SignupButtonText: {
-        color: 'black',
-        fontSize: 14,
-        fontWeight: '900'
+    SignupButton: {
+        backgroundColor:'black', 
+        borderWidth: 1, 
+        borderColor:'#BAFF4C' 
+    },
+    SignupButtonText:{
+        color:'white', 
+        fontSize: 13, 
+        fontWeight: '500'
     }
 })
