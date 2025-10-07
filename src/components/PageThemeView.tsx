@@ -11,10 +11,10 @@ interface PageThemeViewProps {
 
 const PageThemeView: React.FC<PageThemeViewProps> = ({ children }) => {
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor:'black', padding: 4}}>
+    <SafeAreaView style={{ width:'100%', height:'100%', backgroundColor:'black', padding: 4}}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+        style={{ width:'100%', height:'100%' }}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20} // adjust if needed
       >
         {children}

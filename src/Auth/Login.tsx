@@ -9,7 +9,6 @@ import React, { useState } from "react";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import login_banner from "../../assets/visuals/images/Stamin_Login.png";
-import logo from "../../assets/visuals/logos/Stamin.Logo.png"
 import InputHeadingText from '../components/InputSection/InputHeadingText';
 import LogoWithName from '../components/Headers/LogoWithName';
 
