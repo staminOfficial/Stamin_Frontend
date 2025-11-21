@@ -11,13 +11,19 @@ import { RootStackParamList } from '../types/navigation';
 import login_banner from "../../assets/visuals/images/Stamin_Login.png";
 import InputHeadingText from '../components/InputSection/InputHeadingText';
 import LogoWithName from '../components/Headers/LogoWithName';
+import loginSchema from '../schemas/loginSchema';
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch,RootState } from '../../reduxStore';
 
 const Login = () => {
     type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
     const navigation = useNavigation<LoginScreenNavigationProp>();
 
     //useStates
+    const dispatch = useDispatch<AppDispatch>();
     const [id, setId] = useState("")
+    const [loading, setLoading] = useState(false);
+    const [password, setPassword] = useState("");
 
     //Signup Functions
     const handleSignup = async () => {
@@ -26,6 +32,33 @@ const Login = () => {
 
     //Login Function
     const handleLogin = async () => {
+        // try {
+        //     const loginData = id.includes("@")
+        //         ? loginSchema.parse({ email: id, password })
+        //         : loginSchema.parse({ email: id, password });
+
+        //     // Reset state and start loading
+        //     dispatch(resetAuthState());
+        //     setLoading(true);
+
+        //     // Dispatch login action
+        //     const response = await dispatch(loginUser(loginData)).unwrap();
+        //     await dispatch(initializeAuth());
+
+        //     // Feedback on Success
+        //     TouchableNativeFeedback(response.message || "Login successfull", "Success");
+        //     navigation.navigate('Home');
+
+        // } catch (err: any) {
+        //     if (err instanceof z.ZodError) {
+        //         const validationError = err.errors[0]?.message || "Invalid input.";
+        //         feedback(validationError);
+        //     } else {
+        //         feedback(err);
+        //     }
+        // } finally {
+        //     setLoading(false);
+        // }
         // Login function logic
     }
 
@@ -155,13 +188,13 @@ const styles = StyleSheet.create({
         paddingVertical: 1
     },
     SignupButton: {
-        backgroundColor:'black', 
-        borderWidth: 1, 
-        borderColor:'#BAFF4C' 
+        backgroundColor: 'black',
+        borderWidth: 1,
+        borderColor: '#BAFF4C'
     },
-    SignupButtonText:{
-        color:'white', 
-        fontSize: 13, 
+    SignupButtonText: {
+        color: 'white',
+        fontSize: 13,
         fontWeight: '500'
     }
 })

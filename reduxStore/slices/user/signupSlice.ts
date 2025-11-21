@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { PUBLIC_BASE_URL } from "@env";
+import { REACT_NATIVE_BASE_URL } from "@env";
+import { saveAuthData } from '../../../utils/secureStore';
 
 //Types
 interface SignupState {
@@ -35,7 +36,7 @@ export const signupUser = createAsyncThunk<
 >("auth/SignupUser", async (SignupPayload, { rejectWithValue }) => {
     try {
         const response = await fetch(
-            `${PUBLIC_BASE_URL}/api/v1/initiate-signup`,
+            `${REACT_NATIVE_BASE_URL}/api/v1/initiate-signup`,
             {
                 method: "POST",
                 headers: {
@@ -44,7 +45,7 @@ export const signupUser = createAsyncThunk<
                 body: JSON.stringify(SignupPayload),
             }
         );
-        console.log("PUBLIC_BASE_URL:", PUBLIC_BASE_URL);
+        console.log("REACT_NATIVE_BASE_URL:", REACT_NATIVE_BASE_URL);
 
         const data = await response.json();
 
@@ -76,7 +77,7 @@ export const verifyOtpSignup = createAsyncThunk<
 >("auth/verifyOtp", async (OtpPayload, { rejectWithValue }) => {
     try {
         const response = await fetch(
-            `${PUBLIC_BASE_URL}/api/v1/verify-otp`,
+            `${REACT_NATIVE_BASE_URL}/api/v1/verify-otp`,
             {
                 method: "POST",
                 headers: {
@@ -114,7 +115,7 @@ export const resendOtp = createAsyncThunk<
 >("auth/resendOtp", async (resendOTPPayload, { rejectWithValue }) => {
     try {
         const response = await fetch(
-            `${PUBLIC_BASE_URL}/api/v1/resend-otp`,
+            `${REACT_NATIVE_BASE_URL}/api/v1/resend-otp`,
             {
                 method: "POST",
                 headers: {
@@ -139,6 +140,51 @@ export const resendOtp = createAsyncThunk<
     }
 });
 
+export interface completeSignupPayload {
+    email: string;
+    password: string | null;
+}
+export const completeSignup = createAsyncThunk<
+    {
+        user: any;
+        message: string;
+    },
+    completeSignupPayload,
+    { rejectValue: string }
+>("user/completeSignup", async (completeSignupPayload, { rejectWithValue }) => {
+    try {
+        const response = await fetch(
+            `${process.env.REACT_NATIVE_BASE_URL}/api/v1/complete-signup`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(completeSignupPayload),
+            }
+        );
+
+        const data = await response.json();
+        console.log("redux", data);
+
+        if (!response.ok) {
+            return rejectWithValue(data.message || "Something went srong!");
+        }
+
+        // Convert tokens to strings and save in secure Store
+        console.log("saving accessToken");
+        await saveAuthData({
+            accessToken: data.data.accessToken,
+            refreshToken: data.data.refreshToken,
+            expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 1 day expiry
+        });
+
+        return { user: data.data.user, message: data.message };
+    } catch (error: any) {
+        console.error("Complete Signup Error:", error);
+        return rejectWithValue(error.message || "Network error!");
+    }
+})
 
 // Slices
 const signupSlice = createSlice({

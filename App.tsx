@@ -34,7 +34,7 @@ function App() {
         <Stack.Screen name="AccountCreated" component={AccountCreated} options={{ animation: 'slide_from_right' }} />
 
         {/* App Main Screens */}
-        <Stack.Screen name="Home" component={Home} options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="Home" component={Home} options={{ animation: 'none' }} />
       </Stack.Navigator>
     </NavigationContainer>
       </PersistGate>

@@ -1,3 +1,3 @@
 declare module '@env' {
-  export const PUBLIC_BASE_URL: string;
+  export const REACT_NATIVE_BASE_URL: string;
 }

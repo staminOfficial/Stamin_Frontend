@@ -12,7 +12,7 @@ interface SignupButtonProps {
   children: React.ReactNode;
   disabled: boolean;
   textStyle?: any;
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
 }
 
 const AuthButton: React.FC<SignupButtonProps> = ({

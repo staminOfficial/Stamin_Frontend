@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, BackHandler } from 'react-native'
+import React, { useCallback } from 'react'
 import PageThemeView from '../components/PageThemeView'
 import AuthHeaderFrame from '../components/Headers/Auth/AuthHeaderFrame'
 import LogoWithName from '../components/Headers/LogoWithName'
@@ -8,16 +8,32 @@ import TextScallingFalse from '../components/TextScallingFalse'
 import AuthButton from '../components/Buttons/AuthButton'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useSelector, UseSelector } from 'react-redux'
+import { RootState } from '../../reduxStore'
 
 
 const AccountCreated = () => {
     type AccountCreatedNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
     const navigation = useNavigation<AccountCreatedNavigationProp>();
+    const { email } = useSelector((state: RootState) => state.signup)
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                navigation.replace('Login'); // go to Login instead of previous screen
+                return true; // prevent default back
+            };
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+             return () => subscription.remove();
+        }, [navigation])
+    );
+
 
     //Functions
     const handleDone = async () => {
-        navigation.navigate('Home');
+            navigation.navigate('Home');
     };
 
     return (
@@ -62,7 +78,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         textAlign: 'center',
     },
-    ButtonStyle:{
+    ButtonStyle: {
         marginVertical: 50
     }
 })

@@ -26,7 +26,6 @@ const CreateAccount = () => {
   type CraeteAccountScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'CreateAccount'>;
   const navigation = useNavigation<CraeteAccountScreenNavigationProp>();
   const dispatch = useDispatch<AppDispatch>();
-  const { loading } = useSelector((state: RootState) => state.signup);
   
   //Manual functions
   const isAndroid = Platform.OS === "android";
@@ -37,6 +36,7 @@ const CreateAccount = () => {
   const [email, setEmail] = useState("")
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [dobDate, setDobDate] = useState(new Date());
+  const [loading, setLoading]= useState(false);
 
   //Form Data
   const formData = {
@@ -49,6 +49,7 @@ const CreateAccount = () => {
   //feedback message
     const feedback = (message: string, type: "error" | "success" = "error") => {
     if (type === "error") {
+      setLoading(false);
       // Vibration.vibrate(vibrationPattern);
       isAndroid
         ? ToastAndroid.show(message, ToastAndroid.SHORT)
@@ -70,6 +71,7 @@ const CreateAccount = () => {
   //Continue button function
   const ValidateSignupForm = async () => {
     try {
+      setLoading(true);
       const SignupPayload = signupSchema.parse(formData);
       // ✅ NOW convert to ISO only for sending to backend
       const payloadForBackend = {
@@ -86,6 +88,7 @@ const CreateAccount = () => {
       feedback(response.message || "OTP sent to email", "success");
       // Navigate to next page
       navigation.navigate('OtpVerify')
+      setLoading(false);
     } catch (err: any) {
       if (err instanceof z.ZodError) {
         const validationError = err.errors[0]?.message || "Invalid input.";

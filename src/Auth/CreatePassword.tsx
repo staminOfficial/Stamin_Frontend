@@ -1,5 +1,5 @@
-import { StyleSheet, ScrollView, View } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, ScrollView, View, Vibration, Platform, ToastAndroid} from 'react-native'
+import React, { useEffect, useState } from 'react'
 import PageThemeView from '../components/PageThemeView'
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../types/navigation';
@@ -13,16 +13,72 @@ import CaptionText from '../components/Headers/Auth/CaptionText'
 import AuthButton from '../components/Buttons/AuthButton'
 import AuthSteps from '../components/Indicators/AuthIndicators/AuthSteps';
 import PasswordInputSection from '../components/InputSection/PasswordInputSection';
+import { useDispatch, useSelector} from 'react-redux';
+import { vibrationPattern } from '../constants/vibrationPattern';
+import Toast from "react-native-toast-message";
+import { AppDispatch, RootState } from '../../reduxStore';
+import { completeSignup, completeSignupPayload } from '../../reduxStore/slices/user/signupSlice';
 
 const CreatePassword = () => {
     type CreatePasswordNavigationProp = NativeStackNavigationProp<RootStackParamList, 'OtpVerify'>;
     const navigation = useNavigation<CreatePasswordNavigationProp>();
     //useStates
     const [password, setPassword] = useState('')
+    const dispatch = useDispatch<AppDispatch>();
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [matched, setMatching] = useState(false);
+
+    const isAndroid = Platform.OS === "android";
+    const passwordMatched = password === confirmPassword;
+    const { loading, email } = useSelector((state: RootState) => state.signup);
+    console.log("email - ",email)
+
+    const feedback = (message: string, type: "error" | "success" = "error") => {
+        if (type === "error") {
+            Vibration.vibrate(vibrationPattern);
+            isAndroid
+                ? ToastAndroid.show(message, ToastAndroid.SHORT)
+                : Toast.show({
+                    type,
+                    text1: message,
+                    visibilityTime: 3000,
+                    autoHide: true,
+                });
+        } else {
+            Toast.show({
+                type,
+                text1: message,
+                visibilityTime: 3000,
+                autoHide: true,
+            });
+        }
+    };
 
     //Functions
     const handleNext = async () => {
-        navigation.navigate('AccountCreated');
+        if(password.length === 0){
+            feedback("Password is required")
+            return;
+        }
+        if (password.length < 8) {
+            feedback("Password must be at least 8 characters long.", "error");
+            return;
+        }
+        const CompleteSignupPayload = {
+            email: email || "",
+            password: password || ""
+        }
+        try {
+            const result = await dispatch(
+                completeSignup(CompleteSignupPayload)
+            ).unwrap();
+
+            feedback(result.message, "success");
+            navigation.navigate('AccountCreated');
+        } catch (error) {
+            console.error("Signup error:", error);
+            feedback("Something went wrong. Please try agian.", "error");
+        }
     };
 
     return (
@@ -53,11 +109,11 @@ const CreatePassword = () => {
                     <View>
                         <InputHeadingText>Confirm Password</InputHeadingText>
                         <PasswordInputSection
-                            placeholder='' value={password}
-                            onChangeText={setPassword} />
+                            placeholder='' value={confirmPassword}
+                            onChangeText={setConfirmPassword} />
                     </View>
                 </View>
-                <AuthButton disabled={false} style={styles.NextButtonPosition} onPress={handleNext}>
+                <AuthButton disabled={!passwordMatched} style={[styles.NextButtonPosition, { backgroundColor: passwordMatched ? '#BAFF4C' : '#202020' }]} onPress={handleNext}>
                     Next
                 </AuthButton>
                 {/* Auth Indicator */}
@@ -76,6 +132,6 @@ const styles = StyleSheet.create({
         gap: 16
     },
     NextButtonPosition: {
-        marginVertical: 40
+        marginVertical: 40,
     }
 })
