@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import PageThemeView from '../components/PageThemeView'
+import TextScallingFalse from '../components/TextScallingFalse'
 
 const Profile = () => {
   return (
-    <View>
-      <Text>Profile</Text>
-    </View>
+    <PageThemeView>
+      <TextScallingFalse style={{color:'white', fontWeight:'500', fontSize: 20, alignSelf:'center'}}>Profile</TextScallingFalse>
+    </PageThemeView>
   )
 }
 

@@ -13,7 +13,7 @@ import CreateAccount from './src/Auth/CreateAccount';
 import OtpVerify from './src/Auth/OtpVerify';
 import CreatePassword from './src/Auth/CreatePassword';
 import AccountCreated from './src/Auth/AccountCreated';
-import Home from './src/App/Home';
+import AppTabs from './src/components/BottomNavigationBar/AppTabsNavigator';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -34,7 +34,7 @@ function App() {
         <Stack.Screen name="AccountCreated" component={AccountCreated} options={{ animation: 'slide_from_right' }} />
 
         {/* App Main Screens */}
-        <Stack.Screen name="Home" component={Home} options={{ animation: 'none' }} />
+        <Stack.Screen name="Home" component={AppTabs} options={{ animation: 'none' }} />
       </Stack.Navigator>
     </NavigationContainer>
       </PersistGate>

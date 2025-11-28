@@ -3,7 +3,7 @@ import GeneralInputSection from '../components/InputSection/GeneralInputSection'
 import PageThemeView from '../components/PageThemeView';
 import CrossIcon from '../components/Svg/Icons_svg/CrossSvg';
 import TextScallingFalse from '../components/TextScallingFalse';
-import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, TouchableOpacity, View, Vibration, Platform, ToastAndroid} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from "react";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -12,8 +12,12 @@ import login_banner from "../../assets/visuals/images/Stamin_Login.png";
 import InputHeadingText from '../components/InputSection/InputHeadingText';
 import LogoWithName from '../components/Headers/LogoWithName';
 import loginSchema from '../schemas/loginSchema';
+import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch,RootState } from '../../reduxStore';
+import { AppDispatch, RootState } from '../../reduxStore';
+import { initializeAuth, loginUser, resetAuthState } from '../../reduxStore/slices/user/authSlice';
+import { z } from 'zod';
+import PasswordInputSection from '../components/InputSection/PasswordInputSection';
 
 const Login = () => {
     type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
@@ -25,41 +29,59 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [password, setPassword] = useState("");
 
+    const isAndroid = Platform.OS === "android";
+
     //Signup Functions
-    const handleSignup = async () => {
+    const handleSignup = () => {
         navigation.navigate('CreateAccount');
+    };
+
+    const feedback = (errorMsg: string, type: "error" | "success" = "error") => {
+        const vibrationPattern = [0, 50, 80, 50];
+
+        if (type === "error") {
+            Vibration.vibrate(vibrationPattern);
+        }
+
+        isAndroid
+            ? ToastAndroid.show(errorMsg, ToastAndroid.SHORT)
+            : Toast.show({
+                type,
+                text1: errorMsg,
+                visibilityTime: 3000,
+                autoHide: true,
+            });
     };
 
     //Login Function
     const handleLogin = async () => {
-        // try {
-        //     const loginData = id.includes("@")
-        //         ? loginSchema.parse({ email: id, password })
-        //         : loginSchema.parse({ email: id, password });
+        try {
+            const loginData = id.includes("@")
+                ? loginSchema.parse({ email: id, password })
+                : loginSchema.parse({ email: id, password });
 
-        //     // Reset state and start loading
-        //     dispatch(resetAuthState());
-        //     setLoading(true);
+            // Reset state and start loading
+            dispatch(resetAuthState());
+            setLoading(true);
 
-        //     // Dispatch login action
-        //     const response = await dispatch(loginUser(loginData)).unwrap();
-        //     await dispatch(initializeAuth());
+            // Dispatch login action
+            const response = await dispatch(loginUser(loginData)).unwrap();
+            await dispatch(initializeAuth());
 
-        //     // Feedback on Success
-        //     TouchableNativeFeedback(response.message || "Login successfull", "Success");
-        //     navigation.navigate('Home');
+            // Feedback on Success
+            feedback(response.message || "Login successfull", "success");
+            navigation.navigate('Home');
 
-        // } catch (err: any) {
-        //     if (err instanceof z.ZodError) {
-        //         const validationError = err.errors[0]?.message || "Invalid input.";
-        //         feedback(validationError);
-        //     } else {
-        //         feedback(err);
-        //     }
-        // } finally {
-        //     setLoading(false);
-        // }
-        // Login function logic
+        } catch (err: any) {
+            if (err instanceof z.ZodError) {
+                const validationError = err.errors[0]?.message || "Invalid input.";
+                feedback(validationError);
+            } else {
+                feedback(err);
+            }
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -94,9 +116,9 @@ const Login = () => {
                         </View>
                         <View>
                             <InputHeadingText>Password</InputHeadingText>
-                            <GeneralInputSection
-                                placeholder='' value={id}
-                                onChangeText={setId} />
+                            <PasswordInputSection
+                                placeholder='' value={password}
+                                onChangeText={setPassword} />
                         </View>
                         <TouchableOpacity activeOpacity={0.5} style={styles.ForgotPasswordButton}>
                             <InputHeadingText style={{ color: '#BAFF4C' }}>Forgot Password</InputHeadingText>
@@ -122,7 +144,8 @@ const styles = StyleSheet.create({
     //Main component
     LoginMainView: {
         gap: 15,
-        flex: 1,
+        height:'100%',
+        width:'100%'
     },
     // Header component
     HeaderView: {
