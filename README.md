@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/visuals/images/StaminBanner.png" width="100%" style="margin-right: 12px;" />
+</p>
+
 # Stamin
 
 ## AI-Powered Personal Fitness & Health Coach (Hybrid Mobile Application)
