@@ -12,10 +12,13 @@ Unlike generic fitness applications, Stamin builds a context-aware user profile 
 
 > _Screenshots, demo GIFs, and UI walkthroughs will be added here_
 
-- Authentication & Onboarding  
-- User Profile & Privacy Controls  
-- Activity Recording  
-- AI Personal Coach Interface  
+<p align="center">
+  <img src="assets/visuals/images/AuthFirstPage.png" width="240" style="margin-right: 12px;" />
+  <img src="assets/visuals/images/AuthLoginPage.png" width="240" style="margin-right: 12px;" />
+  <img src="assets/visuals/images/Stamin_Profile.png" width="240" style="margin-right: 12px;" />
+  <img src="assets/visuals/images/Stamin_Ai_Page.png" width="240" style="margin-right: 12px;" />
+  <img src="assets/visuals/images/Stamin_AIi_Version_Section.png" width="240" />
+</p>
 
 ---
 
