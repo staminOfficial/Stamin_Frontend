@@ -10,16 +10,23 @@ Unlike generic fitness applications, Stamin builds a context-aware user profile 
 
 ## 📸 Screenshots / Demo
 
-> _Screenshots, demo GIFs, and UI walkthroughs will be added here_
+<p align="center">
+  <img src="assets/visuals/images/AuthFirstPage.png" width="240" />
+  <img src="assets/visuals/images/AuthLoginPage.png" width="240" />
+  <img src="assets/visuals/images/Stamin_Profile.png" width="240" />
+</p>
+
+**Authentication & Profile Flow**  
+Email OTP–based authentication, temporary user handling during signup, and customizable user profiles with profile and cover pictures.
 
 <p align="center">
-  <img src="assets/visuals/images/AuthFirstPage.png" width="240" style="margin-right: 12px;" />
-  <img src="assets/visuals/images/AuthLoginPage.png" width="240" style="margin-right: 12px;" />
-  <img src="assets/visuals/images/Stamin_Profile.png" width="240" style="margin-right: 12px;" />
-  <img src="assets/visuals/images/Stamin_Ai_Page.png" width="240" style="margin-right: 12px;" />
-  <img src="assets/visuals/images/Stamin_AIi_Version_Section.png" width="240" style="margin-right: 12px;" />
+  <img src="assets/visuals/images/Stamin_Ai_Page.png" width="240" />
+  <img src="assets/visuals/images/Stamin_AIi_Version_Section.png" width="240" />
   <img src="assets/visuals/images/Stamin_Ai_Chat_Page.png" width="240" />
 </p>
+
+**AI Fitness Guide Experience**  
+Users interact with a personal AI assistant for health guidance, fitness improvement, and activity insights.
 
 ---
 
