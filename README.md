@@ -35,6 +35,9 @@ Stamin uses secure email + OTP–based authentication with a temporary user stat
 **AI Fitness Guide Experience**  
 The AI assistant builds a personalized fitness profile by analyzing the user’s onboarding data, activity history (running, cycling, etc.), fitness goals, and interaction patterns. Based on this understanding, it provides tailored workout suggestions, health insights, progress feedback, and motivational guidance, helping users make data-driven improvements to their fitness and overall well-being.
 
+<p align="center">
+  <img src="assets/visuals/images/Stamin1st.jpg" width="50%" />
+</p>
 ---
 
 ## ✨ Features
