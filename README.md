@@ -1,97 +1,289 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+Stamin
 
-# Getting Started
+AI-Powered Personal Fitness & Health Coach (Hybrid Mobile Application)
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+Stamin is an AI-based personal fitness and health coaching platform that delivers deeply personalized health, fitness, and diet guidance by understanding each user’s physical metrics, activity data, medical context, and lifestyle patterns.
 
-## Step 1: Start Metro
+Unlike generic fitness applications, Stamin builds a context-aware user profile and provides recommendations tailored only to that individual, continuously adapting as new data is added.
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+📸 Screenshots / Demo
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+(Screenshots, demo GIFs, and UI walkthroughs will be added here)
 
-```sh
-# Using npm
-npm start
+Authentication & Onboarding
 
-# OR using Yarn
-yarn start
-```
+User Profile & Privacy Controls
 
-## Step 2: Build and run your app
+Activity Recording
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+AI Personal Coach Interface
 
-### Android
+✨ Features
+🔐 Authentication & Account Management
 
-```sh
-# Using npm
-npm run android
+Email + OTP–based user registration
 
-# OR using Yarn
-yarn android
-```
+Temporary user concept until signup process is fully completed
 
-### iOS
+Secure user login
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+Forgot password & account recovery flow
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+👤 User Profile
 
-```sh
-bundle install
-```
+Personalized health & fitness profile
 
-Then, and every time you update your native dependencies, run:
+Profile picture and cover image
 
-```sh
-bundle exec pod install
-```
+Height, weight, age, and general details
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+Optional medical report uploads
 
-```sh
-# Using npm
-npm run ios
+Smartwatch data integration
 
-# OR using Yarn
-yarn ios
-```
+⚙️ Profile & Privacy Settings
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+Update profile picture and cover image
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+Edit general profile information
 
-## Step 3: Modify your app
+Full control over sensitive data visibility:
 
-Now that you have successfully run the app, let's make changes!
+Height
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+Weight
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+Age
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+Medical reports
 
-## Congratulations! :tada:
+Privacy-first design — user owns their data
 
-You've successfully run and modified your React Native App. :partying_face:
+🏃 Activity Recording
 
-### Now what?
+Method-oriented sports activity tracking
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+Record activities such as:
 
-# Troubleshooting
+Running
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+Cycling
 
-# Learn More
+Other physical workouts
 
-To learn more about React Native, take a look at the following resources:
+Designed for future expansion into detailed activity analytics
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+🤖 AI Personal Health & Fitness Guide
+
+Dedicated AI assistant experience
+
+Users interact with their personal AI health coach
+
+Personalized guidance for:
+
+Fitness improvement
+
+Diet planning
+
+Health-related questions
+
+AI responses are generated using user profile, activity data, and medical context
+
+Dynamically asks short follow-up questions when required data is missing
+
+🧠 How Stamin Works (High Level)
+
+User creates an account and completes onboarding
+
+Health & fitness profile is configured
+
+Optional smartwatch and medical data are added
+
+Stamin AI builds a contextual user model
+
+User interacts with the AI coach
+
+AI provides personalized, data-driven recommendations
+
+🏗️ Architecture Overview
+
+Stamin uses a dual-backend architecture with clear separation of concerns.
+
+React Native Mobile App
+        |
+        | REST APIs
+        v
+Stamin_Backend_Node (Node.js / Express)
+        |
+        | REST APIs
+        v
+Stamin_Backend_ML (Flask / Python / AI)
+
+
+This approach allows independent scaling of application logic and AI workloads.
+
+🛠️ Tech Stack
+📱 Frontend
+
+React Native (Bare Workflow)
+
+TypeScript
+
+Redux Toolkit (centralized state management)
+
+Zod (schema validation)
+
+🌐 Backend – Application Layer
+
+Repository: Stamin_Backend_Node
+
+Node.js
+
+Express.js
+
+REST API architecture
+
+MVC design pattern
+
+Monolithic architecture (initial phase)
+
+Handles:
+
+Authentication & authorization
+
+User profiles & privacy settings
+
+Activity recording
+
+Smartwatch data
+
+Core business logic
+
+🧠 Backend – AI / ML Layer
+
+Repository: Stamin_Backend_ML
+
+Python
+
+Flask API
+
+Handles:
+
+AI reasoning & inference
+
+Personalized health & fitness recommendations
+
+Future ML model training and experimentation
+
+Note: File structure and API boundaries are defined. Core AI functionality will be implemented incrementally.
+
+🗄️ Databases
+
+MongoDB (current)
+
+Planned dual-database strategy:
+
+SQL database → structured user & account data
+
+MongoDB → high-frequency and flexible data exchange
+
+☁️ Infrastructure & DevOps (Planned / In Progress)
+
+Docker (backend containerization)
+
+Redis (caching & fast access)
+
+BullMQ (background jobs & async processing)
+
+AWS EC2 (deployment)
+
+AWS S3 (media storage)
+
+⚙️ Setup & Installation (Local)
+# Clone repositories
+git clone <frontend-repo>
+git clone <Stamin_Backend_Node>
+git clone <Stamin_Backend_ML>
+
+# Backend (Node.js)
+cd Stamin_Backend_Node
+npm install
+npm run dev
+
+# Backend (ML)
+cd ../Stamin_Backend_ML
+pip install -r requirements.txt
+python app.py
+
+# Frontend
+cd ../frontend
+npm install
+npx react-native run-android
+# or
+npx react-native run-ios
+
+
+Environment variables and detailed setup instructions will be documented as the project matures.
+
+🚀 Usage
+
+Register and complete user onboarding
+
+Configure profile and privacy settings
+
+Record physical activities
+
+Open the AI coach page
+
+Ask fitness, diet, or health-related questions
+
+Receive personalized recommendations
+
+🧩 Key Design Decisions
+
+Dual-backend architecture to isolate AI from core app logic
+
+REST APIs for language-agnostic communication
+
+Monolith-first approach for faster early development
+
+MVC pattern for maintainability
+
+Privacy-by-design approach
+
+AI kept as an independent service for future scalability
+
+📈 Scalability & Performance Considerations
+
+Redis planned for caching frequently accessed data
+
+BullMQ for background tasks and AI workloads
+
+Independent scaling of AI backend
+
+Docker-based deployments for consistency
+
+AWS infrastructure selected for horizontal scalability
+
+🛣️ Roadmap / Future Improvements
+
+AI model optimization and fine-tuning
+
+Advanced health & activity analytics
+
+Expanded smartwatch ecosystem support
+
+Microservice extraction if required
+
+Offline-first capabilities
+
+Role-based access for medical professionals
+
+📄 License
+
+MIT License (to be finalized)
+
+👤 Author
+
+Ravi Sharma
+Software Engineer | Full-Stack & Mobile Developer
