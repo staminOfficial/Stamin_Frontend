@@ -19,6 +19,9 @@ Unlike generic fitness applications, Stamin builds a context-aware user profile 
 **Authentication & Profile Flow**  
 Stamin uses secure email + OTP–based authentication with a temporary user state during onboarding until signup is fully completed. Once authenticated, users can create a rich fitness profile including profilePic and cover pictures, basic physical metrics, recorded fitness activities, connected smartwatch data, and optional medical reports. This data forms the core context used by the AI to deliver personalized health and fitness guidance.
 
+<br />
+<br />
+
 <p align="center">
   <img src="assets/visuals/images/Stamin_Ai_Page.png" width="240" style="margin-right: 12px;" />
   <img src="assets/visuals/images/Stamin_AIi_Version_Section.png" width="240" style="margin-right: 12px;" />
