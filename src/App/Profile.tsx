@@ -2,7 +2,6 @@ import { StyleSheet, Image, View, Dimensions } from 'react-native'
 import React from 'react'
 import PageThemeView from '../components/PageThemeView'
 import coverpic from '../../assets/visuals/images/coverpic.jpg'
-import profilePic from '../../assets/visuals/images/Stamin_Login.png'
 import TextScallingFalse from '../components/TextScallingFalse'
 import HeartIcon from '../../assets/visuals/images/HeartIcon.jpg'
 import KalBurnIcon from '../../assets/visuals/images/KalBurnIcon.jpg'
@@ -10,22 +9,63 @@ import O2Icon from '../../assets/visuals/images/O2Icon.jpg'
 
 const Profile = () => {
 
-  const size = Dimensions.get('window').width * 0.3;
+  const watch = {
+    watchName: 'Google',
+    watchData: [
+      {
+        icon: HeartIcon,
+        Readings: '75',
+      },
+      {
+        icon: KalBurnIcon,
+        Readings: '100'
+      },
+      {
+        icon: O2Icon,
+        Readings: '98%'
+      },
+      {
+        icon: O2Icon,
+        Readings: '3km'
+      }
+    ]
+  }
 
-  const watchData = [
-    {
-      icon: HeartIcon,
-      Readings: '75',
-    },
-    {
-      icon: KalBurnIcon,
-      Readings: '100'
-    },
-    {
-      icon: O2Icon,
-      Readings: '98%'
-    }
-  ]
+  const watchDetails = () => {
+    return watch.watchData.map((e, i) => {
+      return (
+        <View key={i} style={styles.WatchDetailsCapsule}>
+          <Image source={e.icon} style={styles.WatchDetailsIcon} />
+          <TextScallingFalse style={styles.WatchDetailsText}>
+            {e.Readings}
+          </TextScallingFalse>
+        </View>
+      )
+    })
+  }
+
+  const userData = {
+    coverPic: '',
+    profilePic: '',
+    firstName: 'Taylor',
+    lastName: 'Huges',
+    generalData: [
+      { Label: '', value: 'Jun 2001' },
+      { Label: '', value: 'Brooklyn, Britain' },
+      { Label: 'Status', value: 'yesterday' },
+    ],
+    about: 'Pushing Limits on two Wheels - Elite Road Cyclist With a Passion for Speed and Endurance'
+  }
+
+  const generalDetails = () => {
+    return userData.generalData.map((e, i) => {
+      return (
+        <View key={i}>
+          <TextScallingFalse style={styles.UserGeneralDetailsText}>{e.Label} {e.value}</TextScallingFalse>
+        </View>
+      )
+    })
+  }
 
   return (
     <PageThemeView>
@@ -47,37 +87,27 @@ const Profile = () => {
           </View>
         </View>
         {/* user details part */}
-        <View style={{ width: '100%', gap: 4, paddingHorizontal: 18 }}>
-          <View style={{ width: '100%' }}>
-            <TextScallingFalse style={{ color: 'white', fontSize: 20, fontWeight: '400', flexWrap: 'wrap' }}>Taylor Huges</TextScallingFalse>
+        <View style={styles.UserDetails}>
+          <View style={styles.NameContainer}>
+            <TextScallingFalse style={styles.NameText}>{userData.firstName} {userData.lastName}</TextScallingFalse>
           </View>
-          <View style={{ flexDirection: 'row', gap: 5 }}>
-            <View>
-              <TextScallingFalse style={{ color: 'white', fontWeight: '200', fontSize: 10 }}>Jun 2001</TextScallingFalse>
-            </View>
-            <View>
-              <TextScallingFalse style={{ color: 'white', fontWeight: '200', fontSize: 10 }}>Brooklyn, Britain</TextScallingFalse>
-            </View>
-            <View>
-              <TextScallingFalse style={{ color: 'white', fontWeight: '200', fontSize: 10 }}>Status. Yesterday</TextScallingFalse>
-            </View>
+          <View style={styles.GeneralDataContainer}>
+            {generalDetails()}
           </View>
-          <View style={{ backgroundColor: 'orange', paddingVertical: 20}}>
-            <TextScallingFalse style={{ fontSize: 11, fontWeight: '400', color: 'white', flex: 1, flexWrap: 'wrap' }}>
+          <View style={{}}>
+            <TextScallingFalse style={styles.AboutText}>
               Pushing Limits on two Wheels - Elite Road Cyclist With a Passion for Speed and Endurance
             </TextScallingFalse>
           </View>
         </View>
 
-        <View style={{ backgroundColor: '#181818', height: 44, padding: 5, gap: 5, width: '100%', flexDirection: 'row', borderRadius: size / 2 }}>
-          {watchData.map((e, i) => (
-            <View key={i} style={{ flexDirection: 'row', paddingHorizontal: 10, gap: 10, alignItems: 'center', backgroundColor: '#252525', borderRadius: size / 2 }}>
-              <Image source={e.icon} style={{ width: 20, height: 20, borderRadius: size/2}} />
-              <TextScallingFalse style={{ fontSize: 12, fontWeight: '500', color: 'white' }}>
-                {e.Readings}
-              </TextScallingFalse>
-            </View>
-          ))}
+        <View style={styles.WatchDataContainer}>
+          <View style={styles.WatchReedingsContainer}>
+            {watchDetails()}
+          </View>
+          <View style={styles.WatchNameContainer}>
+            <TextScallingFalse style={styles.WatchNameText}>{watch.watchName}</TextScallingFalse>
+          </View>
         </View>
       </View>
     </PageThemeView>
@@ -96,7 +126,7 @@ const styles = StyleSheet.create({
   CoverPicContainer: {
     width: '100%',
     height: 190,
-    marginBottom: '11%',
+    marginBottom: '12%',
   },
   CoverPic: {
     width: '100%',
@@ -124,5 +154,78 @@ const styles = StyleSheet.create({
     objectFit: 'fill',
     alignSelf: 'center',
     borderRadius: size / 2
+  },
+  UserDetails : {
+    width: '100%', 
+    gap: 8, 
+    paddingHorizontal: 18, 
+    paddingBottom: 20
+  },
+  NameContainer: {
+    width: '100%' 
+  },
+  NameText: {
+    color: 'white', 
+    fontSize: 20, 
+    fontWeight: '400', 
+    flexWrap: 'wrap'
+  },
+  GeneralDataContainer:{
+    flexDirection: 'row', 
+    gap: 10
+  },
+  AboutText:{
+    fontSize: 11, 
+    fontWeight: '200', 
+    color: 'white', 
+    flexWrap: 'wrap'
+  },
+  WatchDataContainer:{
+    backgroundColor: '#181818', 
+    height: 44, 
+    padding: 6, 
+    width: '95%', 
+    alignSelf: 'center', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    flexDirection: 'row', 
+    borderRadius: size / 2
+  },
+  WatchReedingsContainer:{
+    flexDirection: 'row', 
+    gap: 5, 
+    height: '100%'
+  },
+  WatchNameContainer:{
+    paddingHorizontal: 15 
+  },
+  WatchNameText:{
+    fontSize: 11, 
+    fontWeight: '500', 
+    color: 'white'
+  },
+  WatchDetailsCapsule:{
+    flexDirection: 'row', 
+    paddingHorizontal: 8, 
+    gap: 10, 
+    alignItems: 'center', 
+    backgroundColor: '#252525', 
+    borderRadius: size / 2
+  },
+  WatchDetailsIcon:{
+    width: 17, 
+    height: 17, 
+    borderRadius: size / 2
+  },
+  WatchDetailsText:{
+    fontSize: 10, 
+    fontWeight: '500', 
+    color: 'white', 
+    paddingRight: 2
+  },
+  UserGeneralDetailsText:{
+    color: 'white', 
+    fontWeight: '200', 
+    fontSize: 10
   }
 })
