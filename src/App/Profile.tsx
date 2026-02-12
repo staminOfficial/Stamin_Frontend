@@ -1,4 +1,4 @@
-import { StyleSheet, Image, View, Dimensions } from 'react-native'
+import { StyleSheet, Image, View, Dimensions, FlatList } from 'react-native'
 import React from 'react'
 import PageThemeView from '../components/PageThemeView'
 import coverpic from '../../assets/visuals/images/coverpic.jpg'
@@ -67,6 +67,17 @@ const Profile = () => {
     })
   }
 
+  const data = [
+    {
+      id: 1,
+      name: 'item 1'
+    },
+    {
+      id: 2,
+      name: 'item 2'
+    }
+  ]
+
   return (
     <PageThemeView>
       <View style={styles.mainView}>
@@ -107,6 +118,22 @@ const Profile = () => {
           </View>
           <View style={styles.WatchNameContainer}>
             <TextScallingFalse style={styles.WatchNameText}>{watch.watchName}</TextScallingFalse>
+          </View>
+        </View>
+
+        <View style={{ width: '100%', paddingVertical: 10,  paddingHorizontal: 10 }}>
+          <View style={{ width: '100%', flexDirection:'row', borderRadius: 10, borderWidth: 1, borderColor: '#252525', padding: 10 }}>
+            <FlatList
+              data={data} //for main data access
+              horizontal
+              keyExtractor={item => item.id.toString()} //for getting exact details from data
+              renderItem={({ item }) => (
+                <View style={{paddingHorizontal: 10, paddingVertical: 5, gap: 8, borderRadius: 10, borderWidth: 1, flexDirection:'row', justifyContent:'space-between', borderColor:'gray'}}>
+                  <TextScallingFalse style={{color:'gray', fontSize: 12}}>@</TextScallingFalse>
+                  <TextScallingFalse style={{color:'gray'}}>{item.name}</TextScallingFalse>
+                </View>
+              )}
+            />
           </View>
         </View>
       </View>
@@ -155,77 +182,77 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: size / 2
   },
-  UserDetails : {
-    width: '100%', 
-    gap: 8, 
-    paddingHorizontal: 18, 
+  UserDetails: {
+    width: '100%',
+    gap: 8,
+    paddingHorizontal: 18,
     paddingBottom: 20
   },
   NameContainer: {
-    width: '100%' 
+    width: '100%'
   },
   NameText: {
-    color: 'white', 
-    fontSize: 20, 
-    fontWeight: '400', 
+    color: 'white',
+    fontSize: 20,
+    fontWeight: '400',
     flexWrap: 'wrap'
   },
-  GeneralDataContainer:{
-    flexDirection: 'row', 
+  GeneralDataContainer: {
+    flexDirection: 'row',
     gap: 10
   },
-  AboutText:{
-    fontSize: 11, 
-    fontWeight: '200', 
-    color: 'white', 
+  AboutText: {
+    fontSize: 11,
+    fontWeight: '200',
+    color: 'white',
     flexWrap: 'wrap'
   },
-  WatchDataContainer:{
-    backgroundColor: '#181818', 
-    height: 44, 
-    padding: 6, 
-    width: '95%', 
-    alignSelf: 'center', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    flexDirection: 'row', 
+  WatchDataContainer: {
+    backgroundColor: '#181818',
+    height: 44,
+    padding: 6,
+    width: '95%',
+    alignSelf: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
     borderRadius: size / 2
   },
-  WatchReedingsContainer:{
-    flexDirection: 'row', 
-    gap: 5, 
+  WatchReedingsContainer: {
+    flexDirection: 'row',
+    gap: 5,
     height: '100%'
   },
-  WatchNameContainer:{
-    paddingHorizontal: 15 
+  WatchNameContainer: {
+    paddingHorizontal: 15
   },
-  WatchNameText:{
-    fontSize: 11, 
-    fontWeight: '500', 
+  WatchNameText: {
+    fontSize: 11,
+    fontWeight: '500',
     color: 'white'
   },
-  WatchDetailsCapsule:{
-    flexDirection: 'row', 
-    paddingHorizontal: 8, 
-    gap: 10, 
-    alignItems: 'center', 
-    backgroundColor: '#252525', 
+  WatchDetailsCapsule: {
+    flexDirection: 'row',
+    paddingHorizontal: 8,
+    gap: 10,
+    alignItems: 'center',
+    backgroundColor: '#252525',
     borderRadius: size / 2
   },
-  WatchDetailsIcon:{
-    width: 17, 
-    height: 17, 
+  WatchDetailsIcon: {
+    width: 17,
+    height: 17,
     borderRadius: size / 2
   },
-  WatchDetailsText:{
-    fontSize: 10, 
-    fontWeight: '500', 
-    color: 'white', 
+  WatchDetailsText: {
+    fontSize: 10,
+    fontWeight: '500',
+    color: 'white',
     paddingRight: 2
   },
-  UserGeneralDetailsText:{
-    color: 'white', 
-    fontWeight: '200', 
+  UserGeneralDetailsText: {
+    color: 'white',
+    fontWeight: '200',
     fontSize: 10
   }
 })
