@@ -1,5 +1,5 @@
-import { StyleSheet, Image, View, Dimensions, FlatList } from 'react-native'
-import React from 'react'
+import { StyleSheet, Image, View, Dimensions, FlatList, TouchableOpacity } from 'react-native'
+import React, { useState } from 'react'
 import PageThemeView from '../components/PageThemeView'
 import coverpic from '../../assets/visuals/images/coverpic.jpg'
 import TextScallingFalse from '../components/TextScallingFalse'
@@ -8,6 +8,7 @@ import KalBurnIcon from '../../assets/visuals/images/KalBurnIcon.jpg'
 import O2Icon from '../../assets/visuals/images/O2Icon.jpg'
 
 const Profile = () => {
+  const [selectSportsId, setSelectSportsId] = useState(0);
 
   const watch = {
     watchName: 'Google',
@@ -67,16 +68,111 @@ const Profile = () => {
     })
   }
 
-  const data = [
+  const sportsData = [
     {
       id: 1,
-      name: 'item 1'
+      icon: '',
+      name: 'Run',
+      distance: '31.4 km',
+      time: '1h 23m',
+      elevation: '418 m',
+      initial: '0 km',
+      mid: '247 km',
+      high: '405 km',
     },
     {
       id: 2,
-      name: 'item 2'
+      icon: '',
+      name: 'Cycling',
+      distance: '27.4 km',
+      time: '1h 40m',
+      elevation: '320 m',
+      initial: '0 km',
+      mid: '147 km',
+      high: '205 km',
+    },
+    {
+      id: 3,
+      icon: '',
+      name: 'Swim',
+      distance: '2 km',
+      time: '35 m',
+      elevation: '200 m',
+      initial: '0 km',
+      mid: '447 km',
+      high: '305 km',
+    },
+    {
+      id: 4,
+      icon: '',
+      name: 'Javlin',
+      distance: '4 km',
+      time: '2 m',
+      elevation: '310 m',
+      initial: '0 km',
+      mid: '347 km',
+      high: '545 km',
     }
   ]
+
+  const selectSports = (id: number) => {
+    setSelectSportsId(id)
+  }
+
+  const selectedSport = sportsData.find(
+    item => item.id === selectSportsId
+  )
+
+  const sportsDataSections = selectedSport
+    ? [
+      {
+        name: 'Distance',
+        data: `${selectedSport.distance}`,
+      },
+      {
+        name: 'Time',
+        data: `${selectedSport.time}`,
+      },
+      {
+        name: 'Elevation Gain',
+        data: `${selectedSport.elevation}`
+      }
+    ] : [];
+
+  const SportsDataSectionComponent = () => {
+    return sportsDataSections.map((e, i) => {
+      return (
+        <View key={i}>
+          <TextScallingFalse style={styles.SportsDataSectionComponentTitles}>{e.name}</TextScallingFalse>
+          <TextScallingFalse style={styles.SportsDataSectionComponentData}>{e.data}</TextScallingFalse>
+        </View>
+      )
+    })
+  }
+
+  const graphicalNumericSection = selectedSport
+    ? [
+      {
+        name: 'high',
+        data: `${selectedSport.high}`
+      },
+      {
+        name: 'mid',
+        data: `${selectedSport.mid}`
+      },
+      {
+        name: 'initial',
+        data: `${selectedSport.initial}`
+      },
+    ] : [];
+
+  const SportsGraphicalNumericComponent = () => {
+    return graphicalNumericSection.map((e, i) => {
+      return (
+        <TextScallingFalse key={i} style={{ color: 'gray', fontSize: 9 }}>{e.data}</TextScallingFalse>
+      )
+    })
+  }
 
   return (
     <PageThemeView>
@@ -121,21 +217,41 @@ const Profile = () => {
           </View>
         </View>
 
-        <View style={{ width: '100%', paddingVertical: 10,  paddingHorizontal: 10 }}>
-          <View style={{ width: '100%', flexDirection:'row', borderRadius: 10, borderWidth: 1, borderColor: '#252525', padding: 10 }}>
+        <View style={styles.SportsContainer}>
+          <View style={styles.SportsContainerView}>
             <FlatList
-              data={data} //for main data access
+              data={sportsData} //for main data access
               horizontal
-              keyExtractor={item => item.id.toString()} //for getting exact details from data
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={item => item.id.toString()} //to uniquely fetch each data
+              //for rending each items in the list
               renderItem={({ item }) => (
-                <View style={{paddingHorizontal: 10, paddingVertical: 5, gap: 8, borderRadius: 10, borderWidth: 1, flexDirection:'row', justifyContent:'space-between', borderColor:'gray'}}>
-                  <TextScallingFalse style={{color:'gray', fontSize: 12}}>@</TextScallingFalse>
-                  <TextScallingFalse style={{color:'gray'}}>{item.name}</TextScallingFalse>
-                </View>
+                <TouchableOpacity onPress={() => selectSports(item.id)} activeOpacity={0.7}
+                  style={[styles.SportsButton, { borderColor: selectSportsId == item.id ? '#B2ED54' : '#303030' }]}>
+                  <TextScallingFalse style={{ color: selectSportsId == item.id ? '#B2ED54' : '#505050', fontSize: 12 }}>@</TextScallingFalse>
+                  <TextScallingFalse style={{ color: selectSportsId == item.id ? '#B2ED54' : '#505050', fontSize: 13 }}>{item.name}</TextScallingFalse>
+                </TouchableOpacity>
               )}
             />
+            {/* Sports data section */}
+            <View style={styles.SportsDataView}>
+              <TextScallingFalse style={styles.SportsDataHeading}>This week</TextScallingFalse>
+              <View style={styles.ButtonListContainer}>
+                {SportsDataSectionComponent()}
+              </View>
+            </View>
+            {/* graphical presentation section */}
+            <View style={styles.GraphicalPresentationSection}>
+              <View style={styles.GraphicalNumericData}>
+                {SportsGraphicalNumericComponent()}
+              </View>
+              <View style={styles.graphicPatternView}>
+
+              </View>
+            </View>
           </View>
         </View>
+
       </View>
     </PageThemeView>
   )
@@ -254,5 +370,68 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '200',
     fontSize: 10
+  },
+  SportsDataSectionComponentTitles: {
+    fontSize: 12,
+    fontWeight: '300',
+    color: 'white'
+  },
+  SportsDataSectionComponentData: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: 'white'
+  },
+  SportsContainer: {
+    width: '100%',
+    paddingVertical: 14,
+    paddingHorizontal: 10
+  },
+  SportsContainerView: {
+    width: '100%',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#151515', padding: 10
+  },
+  SportsButton: {
+    paddingHorizontal: 10,
+    marginRight: 8,
+    paddingVertical: 5,
+    gap: 8,
+    borderRadius: 10,
+    borderWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  SportsDataView: {
+    width: '100%',
+    paddingVertical: 15,
+    gap: 6,
+    paddingHorizontal: 4
+  },
+  SportsDataHeading: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600'
+  },
+  ButtonListContainer: {
+    flexDirection: 'row',
+    gap: 25
+  },
+  GraphicalPresentationSection: {
+    flexDirection: 'row',
+    width: '100%',
+    gap: 10,
+    paddingLeft: 10,
+    paddingVertical: 10
+  },
+  GraphicalNumericData: {
+    height: 70,
+    gap: 15
+  },
+  graphicPatternView:{
+    borderWidth: 1, 
+    borderColor: '#202020', 
+    width: '80%', 
+    height: 70
   }
 })
