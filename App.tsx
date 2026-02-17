@@ -14,6 +14,7 @@ import OtpVerify from './src/Auth/OtpVerify';
 import CreatePassword from './src/Auth/CreatePassword';
 import AccountCreated from './src/Auth/AccountCreated';
 import AppTabs from './src/components/BottomNavigationBar/AppTabsNavigator';
+import ProfileSettings from './src/App/Settings/ProfileSettings';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -35,6 +36,8 @@ function App() {
 
         {/* App Main Screens */}
         <Stack.Screen name="Home" component={AppTabs} options={{ animation: 'none' }} />
+
+        <Stack.Screen name="ProfileSettings" component={ProfileSettings} options={{ animation: 'none' }} />
       </Stack.Navigator>
     </NavigationContainer>
       </PersistGate>

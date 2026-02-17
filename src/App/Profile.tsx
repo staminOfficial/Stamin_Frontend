@@ -1,4 +1,4 @@
-import { StyleSheet, Image, View, Dimensions, FlatList, TouchableOpacity } from 'react-native'
+import { StyleSheet, Image, View, Dimensions, FlatList, TouchableOpacity, TouchableHighlight } from 'react-native'
 import React, { useState } from 'react'
 import PageThemeView from '../components/PageThemeView'
 import coverpic from '../../assets/visuals/images/coverpic.jpg'
@@ -6,9 +6,15 @@ import TextScallingFalse from '../components/TextScallingFalse'
 import HeartIcon from '../../assets/visuals/images/HeartIcon.jpg'
 import KalBurnIcon from '../../assets/visuals/images/KalBurnIcon.jpg'
 import O2Icon from '../../assets/visuals/images/O2Icon.jpg'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { RootStackParamList } from '../types/navigation';
 
 const Profile = () => {
+  type SettingsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Profile'>;
+
   const [selectSportsId, setSelectSportsId] = useState(0);
+  const navigation = useNavigation<SettingsScreenNavigationProp>()
 
   const watch = {
     watchName: 'Google',
@@ -174,6 +180,10 @@ const Profile = () => {
     })
   }
 
+  const handleSettings = () => {
+    navigation.navigate('ProfileSettings')
+  }
+
   return (
     <PageThemeView>
       <View style={styles.mainView}>
@@ -192,6 +202,9 @@ const Profile = () => {
               />
             </View>
           </View>
+          <TouchableOpacity onPress={handleSettings} activeOpacity={0.4} style={{alignSelf:'flex-end', marginRight: 30, padding: 12}}>
+            <TextScallingFalse style={{color:'white', fontSize: 14, fontWeight:'500', zIndex: 100}}>@</TextScallingFalse>
+          </TouchableOpacity>
         </View>
         {/* user details part */}
         <View style={styles.UserDetails}>
