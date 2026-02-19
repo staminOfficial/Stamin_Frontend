@@ -4,46 +4,64 @@ import coverpic from '../../../assets/visuals/images/coverpic.jpg'
 import PageThemeView from '../../components/PageThemeView'
 import TextScallingFalse from '../../components/TextScallingFalse'
 import { launchImageLibrary } from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker'
 
 const ProfileSettings = () => {
     const [coverUri, setCoverUri] = useState<string | null>(null);
+    const [profileUri, setProfileUri] = useState<string | null>(null);
 
-    const openGallery = async () => {
-        if (Platform.OS == 'android') {
-            await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
-            );
-        }
-        launchImageLibrary({ mediaType: 'photo' }, (response) => {
-            const uri = response.assets?.[0]?.uri;
+    const openGallery = async (type: string) => {
+        try {
+            const image = await ImagePicker.openPicker({
+                mediaType: 'photo',
+                cropping: true,
+                width: type == "cover" ? 410 : 400,
+                height: type == "cover" ? 190 : 400,
+                compressImageQuality: 0.8,
+            });
 
-            if (uri) {
-                setCoverUri(uri);
+            if (image?.path) {
+                if (type == "cover") {
+                    setCoverUri(image.path);
+                }
+                else if (type == "profile") {
+                    setProfileUri(image.path);
+                }
             }
-        });
-    }
+        } catch (error) {
+            console.log("user cancelled or error:", error);
+        }
+    };
+
     return (
         <PageThemeView>
-            <View style={styles.CoverPicContainer}>
-                <TouchableOpacity activeOpacity={0.9} style={{ zIndex: 50, flexDirection: 'row', gap: 6, alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', position: 'absolute', borderRadius: 30 }}>
-                    <TouchableOpacity onPress={openGallery} activeOpacity={0.5} style={{ borderWidth: 1, borderColor: 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 100, flexDirection: 'row', gap: 5 }}>
-                        <TextScallingFalse style={{ color: 'white', fontSize: 13, fontWeight: '600' }}>Change Cover</TextScallingFalse>
-                        <TextScallingFalse style={{ color: 'white', fontSize: 13 }}>@</TextScallingFalse>
-                    </TouchableOpacity>
-                </TouchableOpacity>
-                <Image
-                    source={coverpic}
-                    style={styles.CoverPic}
-                />
-                {/* profile pic part */}
-                <View style={styles.ProfilePicContainer}>
-                    <TouchableOpacity activeOpacity={0.9} style={{ width: '100%', alignItems: 'center', justifyContent: 'center', height: '100%', zIndex: 100, position: 'absolute', borderRadius: size / 2, backgroundColor: 'rgb(0,0,0,0.5)' }} >
-                        <TextScallingFalse style={{ color: 'white', fontSize: 20, alignSelf: 'center' }}>@</TextScallingFalse>
+            <View style={styles.mainView}>
+                {/* cover and profilepic section */}
+                <View style={styles.CoverPicContainer}>
+                    <TouchableOpacity onPress={() => openGallery("cover")} activeOpacity={0.9} style={{ zIndex: 50, flexDirection: 'row', gap: 6, alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', position: 'absolute', borderRadius: 30 }}>
+                        <TouchableOpacity onPress={() => openGallery("cover")} activeOpacity={0.5} style={{ borderWidth: 1, borderColor: 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 100, flexDirection: 'row', gap: 5 }}>
+                            <TextScallingFalse style={{ color: 'white', fontSize: 13, fontWeight: '600' }}>Change Cover</TextScallingFalse>
+                            <TextScallingFalse style={{ color: 'white', fontSize: 13 }}>@</TextScallingFalse>
+                        </TouchableOpacity>
                     </TouchableOpacity>
                     <Image
-                        source={coverpic}
-                        style={styles.ProfilePicImage}
+                        source={coverUri ? { uri: coverUri } : coverpic}
+                        style={styles.CoverPic}
                     />
+                    {/* profile pic part */}
+                    <View style={styles.ProfilePicContainer}>
+                        <TouchableOpacity onPress={() => openGallery("profile")} activeOpacity={0.9} style={{ width: '100%', alignItems: 'center', justifyContent: 'center', height: '100%', zIndex: 100, position: 'absolute', borderRadius: size / 2, backgroundColor: 'rgb(0,0,0,0.5)' }} >
+                            <TextScallingFalse style={{ color: 'white', fontSize: 20, alignSelf: 'center' }}>@</TextScallingFalse>
+                        </TouchableOpacity>
+                        <Image
+                            source={profileUri ? { uri: profileUri } : coverpic}
+                            style={styles.ProfilePicImage}
+                        />
+                    </View>
+                </View>
+
+                <View style={{width:'100%', paddingHorizontal: 20, paddingVertical: 10}}>
+                    <TextScallingFalse style={{color:'white', fontSize: 14, fontWeight:'400'}}>Name Ravi Sharma</TextScallingFalse>
                 </View>
             </View>
         </PageThemeView>
@@ -54,6 +72,11 @@ export default ProfileSettings
 
 const size = Dimensions.get('window').width * 0.3;
 const styles = StyleSheet.create({
+    mainView: {
+        width: '100%',
+        paddingVertical: 20,
+        paddingHorizontal: 4
+    },
     CoverPicContainer: {
         width: '100%',
         height: 190,
