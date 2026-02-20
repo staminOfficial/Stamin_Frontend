@@ -38,9 +38,9 @@ const ProfileSettings = () => {
             <View style={styles.mainView}>
                 {/* cover and profilepic section */}
                 <View style={styles.CoverPicContainer}>
-                    <TouchableOpacity onPress={() => openGallery("cover")} activeOpacity={0.9} style={{ zIndex: 50, flexDirection: 'row', gap: 6, alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', position: 'absolute', borderRadius: 30 }}>
-                        <TouchableOpacity onPress={() => openGallery("cover")} activeOpacity={0.5} style={{ borderWidth: 1, borderColor: 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 100, flexDirection: 'row', gap: 5 }}>
-                            <TextScallingFalse style={{ color: 'white', fontSize: 13, fontWeight: '600' }}>Change Cover</TextScallingFalse>
+                    <TouchableOpacity onPress={() => openGallery("cover")} activeOpacity={0.9} style={styles.CoverPicView}>
+                        <TouchableOpacity onPress={() => openGallery("cover")} activeOpacity={0.5} style={styles.ChangeCoverPicButton}>
+                            <TextScallingFalse style={styles.CoverPicChangeButtonText}>Change Cover</TextScallingFalse>
                             <TextScallingFalse style={{ color: 'white', fontSize: 13 }}>@</TextScallingFalse>
                         </TouchableOpacity>
                     </TouchableOpacity>
@@ -50,7 +50,7 @@ const ProfileSettings = () => {
                     />
                     {/* profile pic part */}
                     <View style={styles.ProfilePicContainer}>
-                        <TouchableOpacity onPress={() => openGallery("profile")} activeOpacity={0.9} style={{ width: '100%', alignItems: 'center', justifyContent: 'center', height: '100%', zIndex: 100, position: 'absolute', borderRadius: size / 2, backgroundColor: 'rgb(0,0,0,0.5)' }} >
+                        <TouchableOpacity onPress={() => openGallery("profile")} activeOpacity={0.9} style={styles.profilePicButton} >
                             <TextScallingFalse style={{ color: 'white', fontSize: 20, alignSelf: 'center' }}>@</TextScallingFalse>
                         </TouchableOpacity>
                         <Image
@@ -60,8 +60,31 @@ const ProfileSettings = () => {
                     </View>
                 </View>
 
-                <View style={{width:'100%', paddingHorizontal: 20, paddingVertical: 10}}>
-                    <TextScallingFalse style={{color:'white', fontSize: 14, fontWeight:'400'}}>Name Ravi Sharma</TextScallingFalse>
+                <View style={styles.UserInfoEditingContainer}>
+                    <View style={styles.editInfoContainer}>
+                        <TextScallingFalse style={styles.text}>First Name   -</TextScallingFalse>
+                        <TextScallingFalse style={styles.text}>Ravi</TextScallingFalse>
+                    </View>
+                    <View style={styles.editInfoContainer}>
+                        <TextScallingFalse style={styles.text}>Last Name   -</TextScallingFalse>
+                        <TextScallingFalse style={styles.text}>Sharma</TextScallingFalse>
+                    </View>
+                    <View style={styles.editInfoContainer}>
+                        <TextScallingFalse style={styles.text}>Date of Birth   -</TextScallingFalse>
+                        <TextScallingFalse style={styles.text}>17/06/2001</TextScallingFalse>
+                    </View>
+                    <View style={styles.editInfoContainer}>
+                        <TextScallingFalse style={styles.text}>Location   -</TextScallingFalse>
+                        <TextScallingFalse style={styles.text}>Brooklyn, Britain</TextScallingFalse>
+                    </View>
+                    <View style={styles.editInfoContainer}>
+                        <TextScallingFalse style={styles.text}>Height   -</TextScallingFalse>
+                        <TextScallingFalse style={styles.text}>6ft</TextScallingFalse>
+                    </View>
+                    <View style={styles.editInfoContainer}>
+                        <TextScallingFalse style={styles.text}>Weight   -</TextScallingFalse>
+                        <TextScallingFalse style={styles.text}>65kg</TextScallingFalse>
+                    </View>
                 </View>
             </View>
         </PageThemeView>
@@ -76,7 +99,7 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingVertical: 20,
         paddingHorizontal: 4
-    },
+    }, 
     CoverPicContainer: {
         width: '100%',
         height: 190,
@@ -113,4 +136,61 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: size / 2
     },
+    CoverPicView: {
+        zIndex: 50,
+        flexDirection: 'row',
+        gap: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        position: 'absolute',
+        borderRadius: 30
+    },
+    ChangeCoverPicButton: {
+        borderWidth: 1,
+        borderColor: 'white',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 100,
+        flexDirection: 'row',
+        gap: 5
+    },
+    CoverPicChangeButtonText: {
+        color: 'white',
+        fontSize: 13,
+        fontWeight: '600'
+    },
+    profilePicButton: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        zIndex: 100,
+        position: 'absolute',
+        borderRadius: size / 2,
+        backgroundColor: 'rgb(0,0,0,0.5)'
+    },
+    UserInfoEditingContainer:{
+        width: '100%', 
+        paddingHorizontal: 10, 
+        paddingVertical: 10, 
+        gap: 10
+    },
+    editInfoContainer:{
+         flexDirection: 'row', 
+         gap: 10,
+         width:'100%',
+         paddingVertical: 10,
+         paddingHorizontal: 20,
+         borderRadius: 10,
+         borderWidth: 1,
+         borderColor:'#252525',
+    },
+    text:{
+        color: 'white', 
+        fontSize: 17, 
+        fontWeight: '400'
+    }
 })
