@@ -5,14 +5,12 @@ import PageThemeView from '../../components/PageThemeView'
 import TextScallingFalse from '../../components/TextScallingFalse'
 import ImagePicker from 'react-native-image-crop-picker'
 import DateTimePicker from '@react-native-community/datetimepicker';
-import BackButtonSvg from '../../components/Svg/Icons_svg/BackButtonSvg'
 import SmallBackButtonSvg from '../../components/Svg/Icons_svg/SmallBackButton'
 
 const ProfileSettings = () => {
     const [coverUri, setCoverUri] = useState<string | null>(null);
     const [profileUri, setProfileUri] = useState<string | null>(null);
     const [modal, setModal] = useState(false);
-    const [modalData, setModalData] = useState<string | null>(null);
     const [calender, setCalender] = useState(false);
     const [date, setDate] = useState(new Date());
 
@@ -26,6 +24,9 @@ const ProfileSettings = () => {
         weight: "65kg",
         about: "Pushing Limits on two Wheels - Elite Road Cyclist With a Passion for Speed and Endurance"
     })
+
+    const [selectedField, setSelectedField] = useState<keyof typeof userData | null>(null);
+    const [modalData, setModalData] = useState<string | number>("");
 
     const openGallery = async (type: string) => {
         try {
@@ -88,12 +89,14 @@ const ProfileSettings = () => {
         }
     ]
 
-    const openModal = (name: string) => {
-        if (name === "Date of Birth") {
+    const openModal = (field: keyof typeof userData) => {
+        if (field === "Date_Of_Birth") {
             setCalender(true);
         }
         else {
-            setModalData(name);
+            //now with the help of keyof and typeof userData's datatypes as well as its key names stored into field
+            setSelectedField(field);//pass the current field name 
+            setModalData(userData[field]);//pass the current field data
             setModal(true);
         }
     }
@@ -119,7 +122,7 @@ const ProfileSettings = () => {
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}><TextScallingFalse style={{ color: 'white' }}>{e.icon}</TextScallingFalse></View>
                         </View>
                     ) : (
-                        <TouchableOpacity onPress={() => openModal(e.name)} activeOpacity={0.7} style={styles.WritingContainer}>
+                        <TouchableOpacity onPress={()=>openModal(keyMap[e.name])} activeOpacity={0.7} style={styles.WritingContainer}>
                             <TextInput editable={false} numberOfLines={1} style={styles.AnswerText}>{value}</TextInput>
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}><TextScallingFalse style={{ color: 'white' }}>{e.icon}</TextScallingFalse></View>
                         </TouchableOpacity>
@@ -147,7 +150,7 @@ const ProfileSettings = () => {
                     />
                     {/* profile pic part */}
                     <View style={styles.ProfilePicContainer}>
-                        <TouchableOpacity onPress={() => openGallery("profile")} activeOpacity={0.9} style={styles.profilePicButton} >
+                        <TouchableOpacity onPress={() => openGallery("profilePic")} activeOpacity={0.9} style={styles.profilePicButton} >
                             <TextScallingFalse style={{ color: 'white', fontSize: 20, alignSelf: 'center' }}>@</TextScallingFalse>
                         </TouchableOpacity>
                         <Image
@@ -168,11 +171,11 @@ const ProfileSettings = () => {
                         <TouchableOpacity onPress={() => setModal(false)} style={{ paddingHorizontal: 15, paddingVertical: 10, }}>
                             <SmallBackButtonSvg />
                         </TouchableOpacity>
-                        <TextScallingFalse style={{ color: 'white', fontSize: 19, fontWeight: '500' }}>{modalData}</TextScallingFalse>
+                        <TextScallingFalse style={{ color: 'white', fontSize: 19, fontWeight: '500' }}>{selectedField}</TextScallingFalse>
                     </View>
-                    <View style={{width:'100%', paddingHorizontal: 20}}>
-                        <TextScallingFalse style={styles.AnswerText}>Brooklyn, Britain</TextScallingFalse>
-                        <View style={{borderBottomWidth: 1, borderColor:'white', width:'100%'}} />
+                    <View style={{ width: '100%', paddingHorizontal: 20 }}>
+                        <TextScallingFalse style={styles.AnswerText}>{modalData}</TextScallingFalse>
+                        <View style={{ borderBottomWidth: 1, borderColor: 'white', width: '100%' }} />
                     </View>
                 </View>
             ) : null}
